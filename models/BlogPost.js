@@ -3,7 +3,8 @@
  * Sử dụng thư viện mongoose
  */
 
-const mongoose = require('mongoose');
+const mongoose = require('mongoose')
+
 const Schema = mongoose.Schema;
 
 /**
@@ -14,6 +15,6 @@ const BlogPostSchema = new Schema({
     body:String
 });
 
-const BlogPost = mongoose.model('BlogPost','BlogPostSchema');
+const BlogPost = mongoose.model('BlogPost',BlogPostSchema);
 module.exports = BlogPost;
 
