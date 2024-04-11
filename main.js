@@ -43,7 +43,7 @@ const connectDB = require('./db/db.js');
  * Lấy dữ liệu từ /models/BlogPost.js
  * Định nghĩa cấu trúc cần lưu trữ dữ liệu kết nối trong MongoDB
  * Phạm Văn Á
- * 10/4/2024
+ * Ngày tạo: 10/4/2024
  */
 const BlogPost = require('./models/BlogPost.js');
 /**
@@ -53,7 +53,7 @@ const BlogPost = require('./models/BlogPost.js');
  * Đặt tên ứng dụng pva
  * Sử dụng express để chạy toàn bộ ứng dụng
  * Phạm Văn Á
- * 10/4/2024
+ * Ngày tạo: 10/4/2024
  */
 const pva = new express();
 
@@ -64,7 +64,7 @@ const pva = new express();
   * Sử dụng EJS vào ứng dụng
   * Với pva.set('view engine','ejs') chúng ta thông báo cho Express sử dụng EJS
   * Phạm Văn Á
-  * 10/4/2024
+  * Ngày tạo: 10/4/2024
   */
 const ejs = require('ejs');
 pva.set('view engine','ejs');
@@ -75,7 +75,7 @@ pva.set('view engine','ejs');
  * Sử dụng chạy các trang tĩnh ví dụ như about.html
  * phần này sẽ được thay thế bởi ejs
  * Phạm Văn Á
- * 10//4/2024
+ * Ngày tạo: 10/4/2024
  */
 pva.use(express.static('public'));
 
