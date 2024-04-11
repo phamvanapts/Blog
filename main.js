@@ -5,7 +5,7 @@
  * Thêm thư viên express vào ứng dụng
  * Đây là thư viện chạy suốt chương trình của chúng ta
  * Người tạo: Phạm Văn Á
- * Ngày tạo: 10/4/2024
+ * Ngày cập nhật: 10/4/2024
  */
 
 const express = require('express');
@@ -15,10 +15,13 @@ const express = require('express');
  * Thư viện này theo dõi quá trình đưa dữ liệu từ client lên server
  * quá trình xử lý có thành công hay không
  * Người tạo: Phạm Văn Á
- * Ngày tạo: 10/4/2024
+ * Ngày cập nhật: 10/4/2024
  */
 const morgan = require('morgan');
 
+/**
+ * 
+ */
 const path = require('path');
 
 /**
@@ -26,7 +29,7 @@ const path = require('path');
  * Thư viện màu của console
  * Chỉ để trang trí khi chạy console
  * Người tạo: Phạm Văn Á
- * Ngày tạo: 10/4/2024
+ * Ngày cập nhật: 10/4/2024
  */
 const colors = require('colors');
 
@@ -42,8 +45,7 @@ const connectDB = require('./db/db.js');
  * import Model
  * Lấy dữ liệu từ /models/BlogPost.js
  * Định nghĩa cấu trúc cần lưu trữ dữ liệu kết nối trong MongoDB
- * Phạm Văn Á
- * Ngày tạo: 10/4/2024
+ * Ngày cập nhật: 10/4/2024
  */
 const BlogPost = require('./models/BlogPost.js');
 /**
@@ -52,8 +54,7 @@ const BlogPost = require('./models/BlogPost.js');
  * Đầu tiên, thêm express vào ứng dụng
  * Đặt tên ứng dụng pva
  * Sử dụng express để chạy toàn bộ ứng dụng
- * Phạm Văn Á
- * Ngày tạo: 10/4/2024
+ * Ngày cập nhật: 10/4/2024
  */
 const pva = new express();
 
@@ -63,8 +64,7 @@ const pva = new express();
   * Render trang HTML động
   * Sử dụng EJS vào ứng dụng
   * Với pva.set('view engine','ejs') chúng ta thông báo cho Express sử dụng EJS
-  * Phạm Văn Á
-  * Ngày tạo: 10/4/2024
+  * Ngày cập nhật: 10/4/2024
   */
 const ejs = require('ejs');
 pva.set('view engine','ejs');
@@ -74,8 +74,7 @@ pva.set('view engine','ejs');
  * public folder for serving static files
  * Sử dụng chạy các trang tĩnh ví dụ như about.html
  * phần này sẽ được thay thế bởi ejs
- * Phạm Văn Á
- * Ngày tạo: 10/4/2024
+ * Ngày cập nhật: 10/4/2024
  */
 pva.use(express.static('public'));
 
@@ -83,7 +82,7 @@ pva.use(express.static('public'));
  * Phần tự bổ sung
  * Sử dụng để ghi nhật ký cho các req và req
  * Người tạo: Phạm Văn Á
- * Ngày tạo: 10/4/2024
+ * Ngày cập nhật: 10/4/2024
  * 
  */
 pva.use(morgan('dev'));
@@ -153,7 +152,7 @@ pva.post('/posts/store', async(req,res)=>{
  * Có thể thay đổi cổng trong file .env hoặc giá trị gán tại file này
  * Mục đích nếu file .env có lỗi hoặc không tải được thì vẫn chạy được server
  * Người tạo: Phạm Văn Á
- * Ngày tạo: 10/4/2024
+ * Ngày cập nhật: 10/4/2024
  */
 const PORT = process.env.PORT || 4000;
 
@@ -165,8 +164,7 @@ const PORT = process.env.PORT || 4000;
  * Xoá các thông tin trước đó khi chạy chương trình bằng lệnh
  * consle.clear tự tìm hiểu
  * Các thông tin khác chỉ ghi cho vui, hấp dẫn khi thực hiện chương trình
- * Người tạo: Phạm Văn Á
- * Ngày tạo: 10/4/2024
+ * Ngày cập nhật: 10/4/2024
  */
 pva.listen(PORT, ()=>{
     console.clear();
@@ -176,3 +174,8 @@ pva.listen(PORT, ()=>{
     console.log(`================================`);
     console.log(`      GOOD LUCK`);
 })
+
+/**
+ * Người tạo: Phạm Văn Á
+ * Ngày tạo: 29/3/2024
+ */

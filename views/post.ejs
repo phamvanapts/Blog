@@ -1,5 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
+    <!--
+        Chapter 4:
+        Cập nhật nội dung từ file layouts/header.ejs
+    -->
 <%- include('layouts/header'); -%>
 
     <body>
@@ -15,8 +19,8 @@
                                     <%=blogpost.title %>
                                 </h1>
                                 <span class="meta">Posted by
-                                    <a href="#">Phạm Văn Á</a>
-                                    on August 24, 2019</span>
+                                    <a href="#"><a href="#"><>%= blogpost.username %></a>
+                                    on <%= blogpost.datePosted.toDateString() %></span>
                             </div>
                         </div>
                     </div>
