@@ -20,7 +20,15 @@ const express = require('express');
 const morgan = require('morgan');
 
 /**
- * 
+ * Chapter 7: Uploading an Image with Express
+ * Cài đặt thư viện express-fileupload: npm install --save express-fileupload
+ * Thêm thư viện vào ứng dụng
+ * Cập nhật: 11/4/2024
+ */
+const fileUpload = require('express-fileupload');
+
+/**
+ * Xử dụng đường dẫn của express
  */
 const path = require('path');
 
@@ -35,7 +43,13 @@ const colors = require('colors');
 
 // import dotenv from "dotenv"; không sử dụng nữa
 const dotenv = require('dotenv');
-//Body-parser
+/**
+ * Chapter 6
+ * Cài đặt npm install body-parser
+ * Xử lý các phương thức gửi lên server
+ * Body-parser
+ */
+
 const bodyParser = require('body-parser');
 
 // import connectDB from "./db/db.js";
@@ -67,6 +81,7 @@ const pva = new express();
   * Ngày cập nhật: 10/4/2024
   */
 const ejs = require('ejs');
+const { error } = require('console');
 pva.set('view engine','ejs');
 
 /**
@@ -86,9 +101,14 @@ pva.use(express.static('public'));
  * 
  */
 pva.use(morgan('dev'));
-
 /**
- * 
+ * Chapter 7: Uploading an image with express
+ * Sử dụng thư viện upload ảnh
+ */
+pva.use(fileUpload);
+/**
+ * Chapter 6
+ * Xử lý các phương thức từ client gửi lên server
  */
 pva.use(bodyParser.json());
 pva.use(bodyParser.urlencoded({extended:true}));
@@ -130,19 +150,39 @@ pva.get('/post/:id',async(req,res)=>{
     // console.log(blogpost);
     // res.sendFile(path.resolve(__dirname,'public/post.html'));
 });
-//Create new post
+
+/**
+ * Chapter 6
+ * route tạo bài viết mới
+ * Cập nhật:11/4/2024
+ * Create new post
+ */
 pva.get('/posts/new',(req,res)=>{
     res.render('create');
     // res.sendFile(path.resolve(__dirname,'public/post.html'));
 });
 
-//post Store
-pva.post('/posts/store', async(req,res)=>{
-    //model create a new doc with browser data
-    console.log(req.body);
-    await BlogPost.create(req.body)
-        res.redirect('/');
-});
+/**
+ * Chapter 6
+ * Tạo bài viết mới
+ * //post Store
+ * thêm xử lý file
+ * Cập nhật: 11/4/2024
+ */
+// pva.post('/posts/store', async(req,res)=>{
+//     //model create a new doc with browser data
+//     console.log(req.body);
+//     // let image = req.files.image;
+//         // image.mv(path.resolve(__dirname,'public/img',image.name),
+//         // async(error) => {
+//             await BlogPost.create({
+//                 ...req.body,
+//                 image:'/img/'+image.name
+//             });
+//             res.redirect('/');
+//     })
+    
+// });
     
 
 /**
