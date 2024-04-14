@@ -151,6 +151,7 @@ const newPostController = require('./controllers/newPostController.js');
 const homeController = require('./controllers/homeController.js');
 const storePostController = require('./controllers/storePostController.js');
 const getPostController = require('./controllers/getPostController.js');
+const newUserController = require('./controllers/newUserController.js');
 /**
  *  Chapter 9
  *  Cập nhật controller
@@ -186,6 +187,11 @@ pva.get('/posts/new',newPostController);
 */
 pva.post('/posts/store',storePostController);
 
+/**
+ * Chapter 10
+ * Register
+ */
+pva.get('/auth/register',newUserController);
 /**
  * Người tạo: Phạm Văn Á
  * Ngày tạo: 29/3/2024
