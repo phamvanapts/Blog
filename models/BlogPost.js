@@ -13,6 +13,7 @@ const Schema = mongoose.Schema;
 /**
  * Xây dựng cấu trúc cho Post
  * Bổ sung username, datePosted
+ * Bổ sung image - 14/4/24
  */
 const BlogPostSchema = new Schema({
     title:String,

@@ -29,8 +29,9 @@ const fileUpload = require('express-fileupload');
 
 /**
  * Xử dụng đường dẫn của express
+ * Không sử dụng tại chương 9
  */
-const path = require('path');
+// const path = require('path');
 
 /**
  * Phần tự bổ sung
@@ -59,9 +60,11 @@ const connectDB = require('./db/db.js');
  * import Model
  * Lấy dữ liệu từ /models/BlogPost.js
  * Định nghĩa cấu trúc cần lưu trữ dữ liệu kết nối trong MongoDB
+ * Không sử dụng chương 9
  * Ngày cập nhật: 10/4/2024
- */
-const BlogPost = require('./models/BlogPost.js');
+ * 14/4/24
+*/
+// const BlogPost = require('./models/BlogPost.js');
 /**
  * Chapter 2: Introduction to npm & Express
  * Introduction to express
@@ -69,19 +72,31 @@ const BlogPost = require('./models/BlogPost.js');
  * Đặt tên ứng dụng pva
  * Sử dụng express để chạy toàn bộ ứng dụng
  * Ngày cập nhật: 10/4/2024
- */
+*/
 const pva = new express();
 
- /**
-  * Chapter 4: Template Engines
-  * npm install ejs --save
-  * Render trang HTML động
-  * Sử dụng EJS vào ứng dụng
-  * Với pva.set('view engine','ejs') chúng ta thông báo cho Express sử dụng EJS
-  * Ngày cập nhật: 10/4/2024
-  */
+/**
+ * Chapter 4: Template Engines
+ * npm install ejs --save
+ * Render trang HTML động
+ * Sử dụng EJS vào ứng dụng
+ * Với pva.set('view engine','ejs') chúng ta thông báo cho Express sử dụng EJS
+ * Ngày cập nhật: 10/4/2024
+*/
 const ejs = require('ejs');
 const { error } = require('console');
+
+/**
+ * Chapter 9
+ * Cập nhật file newPostController vào ứng dụng
+ * Ngày 14/4/24
+ */
+const newPostController = require('./controllers/newPostController.js');
+const homeController = require('./controllers/homeController.js');
+const storePostController = require('./controllers/storePostController.js');
+const getPostController = require('./controllers/getPostController.js');
+const validateMiddleWare = require('./middleware/validationMiddleware.js');
+
 pva.set('view engine','ejs');
 
 /**
@@ -113,28 +128,58 @@ pva.use(fileUpload());
 pva.use(bodyParser.json());
 pva.use(bodyParser.urlencoded({extended:true}));
 connectDB();
-//Create Page Routes
-pva.get('/',async(req,res)=>{
-    const blogposts = await BlogPost.find({});
-    // res.sendFile(path.resolve(__dirname,'/index.html')); ==> chuyển đến trang tĩnh
-    res.render('index', 
-    {
-        blogposts:blogposts
-    }
-);
-    // console.log(blogposts);
-});
-//about
-pva.get('/about',(req,res)=>{
-    res.render('about');
-    // res.sendFile(path.resolve(__dirname,'public/about.html')); ==> chuyển đến trang tĩnh
-});
 
-//contact
-pva.get('/contact',(req,res)=>{
-    res.render('contact');
-    // res.sendFile(path.resolve(__dirname,'public/contact.html'));
-});
+/**
+ * Chapter 8: Introductio to Express Middleware
+ * Custom Middleware
+ * Ví dụ hoạt động của MiddleWare
+ * customMiddleWare lời gọi tạo thông báo ở console
+ * validateMiddleWare kiểm tra điều kiện khi tạo bào viết mới
+ * Chương 9 MVC đã chuyển thành file validationMiddleware.js
+ * Cập nhật: 14/4/24
+ */
+// const customMiddleWare=(req,res,next)=>{
+//     console.log(`Đây là MiddleWare đã được gọi đến!`);
+//     next();
+// }
+// const validateMiddleWare = (req,res,next) =>{
+//     if(req.files == null || req.body.title == null){
+//         return res.redirect('/posts/new');
+//     }
+//     next();
+// }
+// pva.use(customMiddleWare);
+pva.use('/posts/store',validateMiddleWare);
+
+//Create Page Routes
+/**
+ *  Chapter 9
+ *  Cập nhật controller
+ *  Xoá các route cũ
+ *  14/4/24
+ */
+pva.get('/',homeController);
+// pva.get('/',async(req,res)=>{
+//     const blogposts = await BlogPost.find({});
+//     // res.sendFile(path.resolve(__dirname,'/index.html')); ==> chuyển đến trang tĩnh
+//     res.render('index', 
+//         {
+//             blogposts:blogposts
+//         }
+//     );
+//     // console.log(blogposts);
+// });
+//about
+// pva.get('/about',(req,res)=>{
+//     res.render('about');
+//     // res.sendFile(path.resolve(__dirname,'public/about.html')); ==> chuyển đến trang tĩnh
+// });
+
+// //contact
+// pva.get('/contact',(req,res)=>{
+//     res.render('contact');
+//     // res.sendFile(path.resolve(__dirname,'public/contact.html'));
+// });
 
 //post
 // pva.get('/post',(req,res)=>{
@@ -142,26 +187,38 @@ pva.get('/contact',(req,res)=>{
 //     // res.sendFile(path.resolve(__dirname,'public/post.html'));
 // });
 // post/:id
-pva.get('/post/:id',async(req,res)=>{
-    const blogpost = await BlogPost.findById(req.params.id);
-    res.render('post',{
-        blogpost
-    });
-    // console.log(blogpost);
-    // res.sendFile(path.resolve(__dirname,'public/post.html'));
-});
+/**
+ * Chapter 9 MVC
+ * Cập nhật Controller
+ * 14/4/24
+ */
+pva.get('/post/:id', getPostController);
+// pva.get('/post/:id',async(req,res)=>{
+//     const blogpost = await BlogPost.findById(req.params.id);
+//     res.render('post',{
+//         blogpost
+//     });
+//     // console.log(blogpost);
+//     // res.sendFile(path.resolve(__dirname,'public/post.html'));
+// });
 
 /**
  * Chapter 6
  * route tạo bài viết mới
  * Cập nhật:11/4/2024
  * Create new post
+ * Chapter 9:
+ * 
  */
-pva.get('/posts/new',(req,res)=>{
-    res.render('create');
-    // res.sendFile(path.resolve(__dirname,'public/post.html'));
-});
-
+// pva.get('/posts/new',(req,res)=>{
+//     res.render('create');
+//     // res.sendFile(path.resolve(__dirname,'public/post.html'));
+// });
+/**
+ * Chapter 9:
+ * Chuyển đổi thành MVC
+ */
+pva.get('/posts/new',newPostController);
 /**
  * Chapter 6
  * Tạo bài viết mới
@@ -169,22 +226,24 @@ pva.get('/posts/new',(req,res)=>{
  * thêm xử lý file
  * Cập nhật: 11/4/2024
  * tạo biến image là giá trị files.image
- * 
+ * Chapter 9: MVC 
+ * Cập nhật controller
  */
-pva.post('/posts/store', async(req,res)=>{
-    //model create a new doc with browser data
-    console.log(req.body);
-    let image = req.files.image;
-        image.mv(path.resolve(__dirname,'public/img',image.name),
-        async(error) => {
-            await BlogPost.create({
-                ...req.body,
-            image:'/img/'+ image.name
-        });
-            res.redirect('/');
-    })
+pva.post('/posts/store',storePostController);
+// pva.post('/posts/store', async(req,res)=>{
+//     //model create a new doc with browser data
+//     console.log(req.body);
+//     let image = req.files.image;
+//         image.mv(path.resolve(__dirname,'public/img',image.name),
+//         async(error) => {
+//             await BlogPost.create({
+//                 ...req.body,
+//             image:'/img/'+ image.name
+//         });
+//             res.redirect('/');
+//     })
     
-});
+// });
     
 
 /**
