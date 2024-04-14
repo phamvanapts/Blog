@@ -7,9 +7,7 @@
  * Người tạo: Phạm Văn Á
  * Ngày cập nhật: 10/4/2024
  */
-
 const express = require('express');
-
 /**
  * Phần tự bổ sung
  * Thư viện này theo dõi quá trình đưa dữ liệu từ client lên server
@@ -18,7 +16,6 @@ const express = require('express');
  * Ngày cập nhật: 10/4/2024
  */
 const morgan = require('morgan');
-
 /**
  * Chapter 7: Uploading an Image with Express
  * Cài đặt thư viện express-fileupload: npm install --save express-fileupload
@@ -26,13 +23,11 @@ const morgan = require('morgan');
  * Cập nhật: 11/4/2024
  */
 const fileUpload = require('express-fileupload');
-
 /**
  * Xử dụng đường dẫn của express
  * Không sử dụng tại chương 9
  */
 // const path = require('path');
-
 /**
  * Phần tự bổ sung
  * Thư viện màu của console
@@ -41,7 +36,6 @@ const fileUpload = require('express-fileupload');
  * Ngày cập nhật: 10/4/2024
  */
 const colors = require('colors');
-
 // import dotenv from "dotenv"; không sử dụng nữa
 const dotenv = require('dotenv');
 /**
@@ -50,12 +44,9 @@ const dotenv = require('dotenv');
  * Xử lý các phương thức gửi lên server
  * Body-parser
  */
-
 const bodyParser = require('body-parser');
-
 // import connectDB from "./db/db.js";
 const connectDB = require('./db/db.js');
-
 /**
  * import Model
  * Lấy dữ liệu từ /models/BlogPost.js
@@ -74,7 +65,6 @@ const connectDB = require('./db/db.js');
  * Ngày cập nhật: 10/4/2024
 */
 const pva = new express();
-
 /**
  * Chapter 4: Template Engines
  * npm install ejs --save
@@ -85,20 +75,6 @@ const pva = new express();
 */
 const ejs = require('ejs');
 const { error } = require('console');
-
-/**
- * Chapter 9
- * Cập nhật file newPostController vào ứng dụng
- * Ngày 14/4/24
- */
-const newPostController = require('./controllers/newPostController.js');
-const homeController = require('./controllers/homeController.js');
-const storePostController = require('./controllers/storePostController.js');
-const getPostController = require('./controllers/getPostController.js');
-const validateMiddleWare = require('./middleware/validationMiddleware.js');
-
-pva.set('view engine','ejs');
-
 /**
  * Chapter 2: Introduction to npm & Express
  * public folder for serving static files
@@ -107,7 +83,9 @@ pva.set('view engine','ejs');
  * Ngày cập nhật: 10/4/2024
  */
 pva.use(express.static('public'));
-
+connectDB();
+const validateMiddleWare = require('./middleware/validateMiddleware.js');
+pva.set('view engine','ejs');
 /**
  * Phần tự bổ sung
  * Sử dụng để ghi nhật ký cho các req và req
@@ -127,8 +105,6 @@ pva.use(fileUpload());
  */
 pva.use(bodyParser.json());
 pva.use(bodyParser.urlencoded({extended:true}));
-connectDB();
-
 /**
  * Chapter 8: Introductio to Express Middleware
  * Custom Middleware
@@ -137,87 +113,66 @@ connectDB();
  * validateMiddleWare kiểm tra điều kiện khi tạo bào viết mới
  * Chương 9 MVC đã chuyển thành file validationMiddleware.js
  * Cập nhật: 14/4/24
- */
-// const customMiddleWare=(req,res,next)=>{
-//     console.log(`Đây là MiddleWare đã được gọi đến!`);
-//     next();
-// }
-// const validateMiddleWare = (req,res,next) =>{
-//     if(req.files == null || req.body.title == null){
-//         return res.redirect('/posts/new');
-//     }
-//     next();
-// }
-// pva.use(customMiddleWare);
+*/
 pva.use('/posts/store',validateMiddleWare);
-
-//Create Page Routes
+/**
+ * Phần tự bổ sung
+ * Đặt tên biến PORT là chạy ứng dụng
+ * Sử dụng dotenv - biến môi trường để cài đặt cổng
+ * Có thể thay đổi cổng trong file .env hoặc giá trị gán tại file này
+ * Mục đích nếu file .env có lỗi hoặc không tải được thì vẫn chạy được server
+ * Ngày cập nhật: 10/4/2024
+*/
+const PORT = process.env.PORT || 4000;
+/**
+ * Chapter 1: Introduction
+ * Chapter 2: Introduction to npm & Express
+ * Ứng dụng hoạt động tại cổng PORT mà ta cài đặt
+ * Bên cạnh đó có thể ghi các thông báo ra màn hình console
+ * Xoá các thông tin trước đó khi chạy chương trình bằng lệnh
+ * consle.clear tự tìm hiểu
+ * Các thông tin khác chỉ ghi cho vui, hấp dẫn khi thực hiện chương trình
+ * Ngày cập nhật: 10/4/2024
+*/
+pva.listen(PORT, ()=>{
+    console.clear();
+    console.log(`================================`);
+    console.log(`     PhamVanA Blog`);
+    console.log(`      PORT: ${PORT}`);
+    console.log(`================================`);
+    console.log(`      GOOD LUCK`);
+})
+/**
+ * Chapter 9
+ * Cập nhật file newPostController vào ứng dụng
+ * Ngày 14/4/24
+ */
+const newPostController = require('./controllers/newPostController.js');
+const homeController = require('./controllers/homeController.js');
+const storePostController = require('./controllers/storePostController.js');
+const getPostController = require('./controllers/getPostController.js');
 /**
  *  Chapter 9
  *  Cập nhật controller
  *  Xoá các route cũ
+ *  Create Page Routes
  *  14/4/24
- */
+*/
 pva.get('/',homeController);
-// pva.get('/',async(req,res)=>{
-//     const blogposts = await BlogPost.find({});
-//     // res.sendFile(path.resolve(__dirname,'/index.html')); ==> chuyển đến trang tĩnh
-//     res.render('index', 
-//         {
-//             blogposts:blogposts
-//         }
-//     );
-//     // console.log(blogposts);
-// });
-//about
-// pva.get('/about',(req,res)=>{
-//     res.render('about');
-//     // res.sendFile(path.resolve(__dirname,'public/about.html')); ==> chuyển đến trang tĩnh
-// });
-
-// //contact
-// pva.get('/contact',(req,res)=>{
-//     res.render('contact');
-//     // res.sendFile(path.resolve(__dirname,'public/contact.html'));
-// });
-
-//post
-// pva.get('/post',(req,res)=>{
-//     res.render('post');
-//     // res.sendFile(path.resolve(__dirname,'public/post.html'));
-// });
-// post/:id
 /**
  * Chapter 9 MVC
  * Cập nhật Controller
  * 14/4/24
- */
+*/
 pva.get('/post/:id', getPostController);
-// pva.get('/post/:id',async(req,res)=>{
-//     const blogpost = await BlogPost.findById(req.params.id);
-//     res.render('post',{
-//         blogpost
-//     });
-//     // console.log(blogpost);
-//     // res.sendFile(path.resolve(__dirname,'public/post.html'));
-// });
-
 /**
  * Chapter 6
  * route tạo bài viết mới
  * Cập nhật:11/4/2024
  * Create new post
  * Chapter 9:
- * 
- */
-// pva.get('/posts/new',(req,res)=>{
-//     res.render('create');
-//     // res.sendFile(path.resolve(__dirname,'public/post.html'));
-// });
-/**
- * Chapter 9:
  * Chuyển đổi thành MVC
- */
+*/
 pva.get('/posts/new',newPostController);
 /**
  * Chapter 6
@@ -228,55 +183,10 @@ pva.get('/posts/new',newPostController);
  * tạo biến image là giá trị files.image
  * Chapter 9: MVC 
  * Cập nhật controller
- */
+*/
 pva.post('/posts/store',storePostController);
-// pva.post('/posts/store', async(req,res)=>{
-//     //model create a new doc with browser data
-//     console.log(req.body);
-//     let image = req.files.image;
-//         image.mv(path.resolve(__dirname,'public/img',image.name),
-//         async(error) => {
-//             await BlogPost.create({
-//                 ...req.body,
-//             image:'/img/'+ image.name
-//         });
-//             res.redirect('/');
-//     })
-    
-// });
-    
-
-/**
- * Phần tự bổ sung
- * Đặt tên biến PORT là chạy ứng dụng
- * Sử dụng dotenv - biến môi trường để cài đặt cổng
- * Có thể thay đổi cổng trong file .env hoặc giá trị gán tại file này
- * Mục đích nếu file .env có lỗi hoặc không tải được thì vẫn chạy được server
- * Người tạo: Phạm Văn Á
- * Ngày cập nhật: 10/4/2024
- */
-const PORT = process.env.PORT || 4000;
-
-/**
- * Chapter 1: Introduction
- * Chapter 2: Introduction to npm & Express
- * Ứng dụng hoạt động tại cổng PORT mà ta cài đặt
- * Bên cạnh đó có thể ghi các thông báo ra màn hình console
- * Xoá các thông tin trước đó khi chạy chương trình bằng lệnh
- * consle.clear tự tìm hiểu
- * Các thông tin khác chỉ ghi cho vui, hấp dẫn khi thực hiện chương trình
- * Ngày cập nhật: 10/4/2024
- */
-pva.listen(PORT, ()=>{
-    console.clear();
-    console.log(`================================`);
-    console.log(`     PhamVanA Blog`);
-    console.log(`      PORT: ${PORT}`);
-    console.log(`================================`);
-    console.log(`      GOOD LUCK`);
-})
 
 /**
  * Người tạo: Phạm Văn Á
  * Ngày tạo: 29/3/2024
- */
+*/
