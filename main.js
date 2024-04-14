@@ -105,7 +105,7 @@ pva.use(morgan('dev'));
  * Chapter 7: Uploading an image with express
  * Sử dụng thư viện upload ảnh
  */
-pva.use(fileUpload);
+pva.use(fileUpload());
 /**
  * Chapter 6
  * Xử lý các phương thức từ client gửi lên server
@@ -168,21 +168,23 @@ pva.get('/posts/new',(req,res)=>{
  * //post Store
  * thêm xử lý file
  * Cập nhật: 11/4/2024
+ * tạo biến image là giá trị files.image
+ * 
  */
-// pva.post('/posts/store', async(req,res)=>{
-//     //model create a new doc with browser data
-//     console.log(req.body);
-//     // let image = req.files.image;
-//         // image.mv(path.resolve(__dirname,'public/img',image.name),
-//         // async(error) => {
-//             await BlogPost.create({
-//                 ...req.body,
-//                 image:'/img/'+image.name
-//             });
-//             res.redirect('/');
-//     })
+pva.post('/posts/store', async(req,res)=>{
+    //model create a new doc with browser data
+    console.log(req.body);
+    let image = req.files.image;
+        image.mv(path.resolve(__dirname,'public/img',image.name),
+        async(error) => {
+            await BlogPost.create({
+                ...req.body,
+            image:'/img/'+ image.name
+        });
+            res.redirect('/');
+    })
     
-// });
+});
     
 
 /**
