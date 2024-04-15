@@ -145,13 +145,15 @@ pva.listen(PORT, ()=>{
 /**
  * Chapter 9
  * Cập nhật file newPostController vào ứng dụng
- * Ngày 14/4/24
+ * Chapter 10, 
+ * Ngày 14/4/24 , 15/4/24
  */
 const newPostController = require('./controllers/newPostController.js');
 const homeController = require('./controllers/homeController.js');
 const storePostController = require('./controllers/storePostController.js');
 const getPostController = require('./controllers/getPostController.js');
 const newUserController = require('./controllers/newUserController.js');
+const storeUserController = require('./controllers/storeUserController.js');
 /**
  *  Chapter 9
  *  Cập nhật controller
@@ -192,6 +194,12 @@ pva.post('/posts/store',storePostController);
  * Register
  */
 pva.get('/auth/register',newUserController);
+/**
+ * Chapter 10
+ * Store User
+ * 15/4/24
+ */
+pva.post('/users/register',storeUserController);
 /**
  * Người tạo: Phạm Văn Á
  * Ngày tạo: 29/3/2024
