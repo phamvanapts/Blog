@@ -45,6 +45,13 @@ const dotenv = require('dotenv');
  * Body-parser
  */
 const bodyParser = require('body-parser');
+
+/**
+ * Chapter 11 : User authentication with Express Session
+ * Install package: npm install --save express-session
+ * Import 
+ */
+const expressSession = require('express-session');
 // import connectDB from "./db/db.js";
 const connectDB = require('./db/db.js');
 /**
@@ -81,10 +88,26 @@ const { error } = require('console');
  * Sử dụng chạy các trang tĩnh ví dụ như about.html
  * phần này sẽ được thay thế bởi ejs
  * Ngày cập nhật: 10/4/2024
- */
+*/
 pva.use(express.static('public'));
 connectDB();
+/**
+ * Chapter 8: Introductio to Express Middleware
+*/
 const validateMiddleWare = require('./middleware/validateMiddleware.js');
+/**
+ * Chapter 11:
+ * Protecting Pages with Authentication Middleware
+ * 17/4/24
+ */
+/**
+ * Chapter 11
+ * Prevent Login/Register if Logged In
+ * if user logged in, redirect to home page
+ * import redirectIfAuthenticatedMiddleware
+*/
+const redirectIfAuthenticatedMiddleware = require('./middleware/redirectIfAuthMiddleware.js');
+const authMiddleware = require('./middleware/authMiddleware.js');
 pva.set('view engine','ejs');
 /**
  * Phần tự bổ sung
@@ -92,29 +115,39 @@ pva.set('view engine','ejs');
  * Người tạo: Phạm Văn Á
  * Ngày cập nhật: 10/4/2024
  * 
- */
+*/
 pva.use(morgan('dev'));
+
+/**
+ * Chapter 11
+ * add session
+ * 17/4/24
+*/
+pva.use(expressSession({
+    secret: 'keyboard cat'
+}));
+
+/**
+ * Chapter 11
+ * Conditionally Display New Post, Login and New User links
+*/
+global.loggedIn = null;
+pva.use("*",(req,res,next)=>{
+    loggedIn = req.session.userId;
+    next();
+});
 /**
  * Chapter 7: Uploading an image with express
  * Sử dụng thư viện upload ảnh
- */
+*/
 pva.use(fileUpload());
 /**
  * Chapter 6
  * Xử lý các phương thức từ client gửi lên server
- */
+*/
 pva.use(bodyParser.json());
 pva.use(bodyParser.urlencoded({extended:true}));
-/**
- * Chapter 8: Introductio to Express Middleware
- * Custom Middleware
- * Ví dụ hoạt động của MiddleWare
- * customMiddleWare lời gọi tạo thông báo ở console
- * validateMiddleWare kiểm tra điều kiện khi tạo bào viết mới
- * Chương 9 MVC đã chuyển thành file validationMiddleware.js
- * Cập nhật: 14/4/24
-*/
-pva.use('/posts/store',validateMiddleWare);
+
 /**
  * Phần tự bổ sung
  * Đặt tên biến PORT là chạy ứng dụng
@@ -147,7 +180,7 @@ pva.listen(PORT, ()=>{
  * Cập nhật file newPostController vào ứng dụng
  * Chapter 10, 
  * Ngày 14/4/24 , 15/4/24
- */
+*/
 const newPostController = require('./controllers/newPostController.js');
 const homeController = require('./controllers/homeController.js');
 const storePostController = require('./controllers/storePostController.js');
@@ -156,6 +189,11 @@ const newUserController = require('./controllers/newUserController.js');
 const storeUserController = require('./controllers/storeUserController.js');
 const loginController = require('./controllers/loginController.js');
 const loginUserController = require('./controllers/loginUserController.js');
+/**
+ * Chapter 11
+ * User Logout
+ */
+const logoutController = require('./controllers/logoutController.js');
 /**
  *  Chapter 9
  *  Cập nhật controller
@@ -178,7 +216,17 @@ pva.get('/post/:id', getPostController);
  * Chapter 9:
  * Chuyển đổi thành MVC
 */
-pva.get('/posts/new',newPostController);
+pva.get('/posts/new',authMiddleware,newPostController);
+// /**
+//  * Chapter 8: Introductio to Express Middleware
+//  * Custom Middleware
+//  * Ví dụ hoạt động của MiddleWare
+//  * customMiddleWare lời gọi tạo thông báo ở console
+//  * validateMiddleWare kiểm tra điều kiện khi tạo bào viết mới
+//  * Chương 9 MVC đã chuyển thành file validationMiddleware.js
+//  * Cập nhật: 14/4/24
+// */
+// pva.use('/posts/store',validateMiddleWare);
 /**
  * Chapter 6
  * Tạo bài viết mới
@@ -189,27 +237,34 @@ pva.get('/posts/new',newPostController);
  * Chapter 9: MVC 
  * Cập nhật controller
 */
-pva.post('/posts/store',storePostController);
+
+pva.post('/posts/store',authMiddleware,validateMiddleWare,storePostController);
 
 /**
  * Chapter 10
  * Register
  */
-pva.get('/auth/register',newUserController);
+pva.get('/auth/register',redirectIfAuthenticatedMiddleware,newUserController);
 /**
  * Chapter 10
  * Store User
  * 15/4/24
  */
-pva.post('/users/register',storeUserController);
+pva.post('/users/register',redirectIfAuthenticatedMiddleware,storeUserController);
 /**
  * Chapter 10
  * login
  * Login User Controller
  * 15/4/24
  */
-pva.get('/auth/login',loginController);
-pva.post('/users/login',loginUserController);
+pva.get('/auth/login',redirectIfAuthenticatedMiddleware,loginController);
+pva.post('/users/login',redirectIfAuthenticatedMiddleware,loginUserController);
+/**
+ * Chapter 11
+ * Logout
+ */
+pva.get('/auth/logout',logoutController);
+pva.use((req,res)=>{res.render('notfound')});
 /**
  * Người tạo: Phạm Văn Á
  * Ngày tạo: 29/3/2024
