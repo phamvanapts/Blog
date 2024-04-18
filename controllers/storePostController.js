@@ -14,7 +14,8 @@ module.exports = (req,res) => {
     async(error) => {
         await BlogPost.create({
             ...req.body,
-            image:'/img/'+ image.name
+            image:'/img/'+ image.name,
+            userid: req.session.userId
         });
         res.redirect('/');
     })
